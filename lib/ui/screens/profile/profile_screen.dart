@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../../constants/app_strings.dart';
 import '../../../helpers/app_styles.dart';
 import '../../../helpers/fire_store_helper.dart';
@@ -19,10 +17,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   DatabaseService db = DatabaseService();
   bool _edit = false;
 
+  var fistName = TextEditingController();
+  var lastName = TextEditingController();
+  var email = TextEditingController();
+  var mobile = TextEditingController();
+
   updateEditMode(bool edit) {
     setState(() {
       _edit = edit;
     });
+  }
+
+  selectImage() async {
+    final ImagePicker _picker = ImagePicker();
+    // Pick an image
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    // Capture a photo
   }
 
   @override
@@ -52,54 +62,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
           } else {
             //return Text(snapshot.data!.docs.first.get('active').toString());
             return Container(
+                padding: EdgeInsets.all(20),
                 decoration: shadowDecoration(),
-                child: Column(
-                    children: _edit
-                        ? [
-                            CircleAvatar(
-                              radius: 70,
-                              backgroundImage: NetworkImage(
-                                  snapshot.data!.docs.first.get('image_url') ??
-                                      ""),
+                child: _edit
+                    ? Column(children: [
+                        InkWell(
+                          onTap: () {
+                            selectImage();
+                          },
+                          child: CircleAvatar(
+                            radius: 70,
+                            backgroundImage: NetworkImage(
+                                snapshot.data!.docs.first.get('image_url') ??
+                                    ""),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: fistName,
+                              ),
                             ),
-                            const SizedBox(height: 8),
-                            TextFormField()
-                          ]
-                        : [
-                            const SizedBox(height: 8),
-                            CircleAvatar(
-                              radius: 70,
-                              backgroundImage: NetworkImage(
-                                  snapshot.data!.docs.first.get('image_url') ??
-                                      ""),
+                            Expanded(
+                              child: TextField(
+                                controller: fistName,
+                              ),
                             ),
-                            ListTile(
-                              title: const Text(str_user_name),
-                              subtitle: _edit
-                                  ? TextFormField(
-                                      controller: TextEditingController(
-                                          text: snapshot.data!.docs.first
-                                              .get('first_name')),
-                                    )
-                                  : Text(
-                                      "${snapshot.data!.docs.first.get('first_name')}  ${snapshot.data!.docs.first.get('last_name')}"),
-                            ),
-                            ListTile(
-                              title: const Text(str_email),
-                              subtitle: Text(
-                                  "${snapshot.data!.docs.first.get('email')}"),
-                            ),
-                            ListTile(
-                              title: const Text(str_mobile_number),
-                              subtitle: Text(
-                                  "${snapshot.data!.docs.first.get('mobile_nummber')}"),
-                            ),
-                            ListTile(
-                              title: const Text(str_gender),
-                              subtitle: Text(
-                                  "${snapshot.data!.docs.first.get('gender')}"),
-                            )
-                          ]));
+                          ],
+                        )
+                      ])
+                    : Column(children: [
+                        const SizedBox(height: 8),
+                        CircleAvatar(
+                          radius: 70,
+                          backgroundImage: NetworkImage(
+                              snapshot.data!.docs.first.get('image_url') ?? ""),
+                        ),
+                        ListTile(
+                          title: const Text(str_user_name),
+                          subtitle: _edit
+                              ? TextFormField(
+                                  controller: TextEditingController(
+                                      text: snapshot.data!.docs.first
+                                          .get('first_name')),
+                                )
+                              : Text(
+                                  "${snapshot.data!.docs.first.get('first_name')}  ${snapshot.data!.docs.first.get('last_name')}"),
+                        ),
+                        ListTile(
+                          title: const Text(str_email),
+                          subtitle:
+                              Text("${snapshot.data!.docs.first.get('email')}"),
+                        ),
+                        ListTile(
+                          title: const Text(str_mobile_number),
+                          subtitle: Text(
+                              "${snapshot.data!.docs.first.get('mobile_nummber')}"),
+                        ),
+                        ListTile(
+                          title: const Text(str_gender),
+                          subtitle: Text(
+                              "${snapshot.data!.docs.first.get('gender')}"),
+                        )
+                      ]));
           }
         },
       ),
