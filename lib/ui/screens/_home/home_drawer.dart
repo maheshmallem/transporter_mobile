@@ -43,9 +43,11 @@ class HomeDrawer extends StatelessWidget {
                 itemCount: homeMenu().length,
                 itemBuilder: ((context, index) => ListTile(
                     onTap: (() {
+                      print("ON CLICK");
                       switch (index) {
                         case 0:
                           Navigator.pushNamed(context, ProfileScreen.name);
+                          Navigator.pop(context);
                           break;
                         default:
                       }

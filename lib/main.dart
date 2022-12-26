@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:transporter/ui/screens/_home/home_screen.dart';
 import 'package:transporter/ui/screens/auth/otp_screen.dart';
 import 'package:transporter/ui/screens/auth/register_screen.dart';
+import 'package:transporter/ui/screens/loads/post_load.dart';
 import 'package:transporter/ui/screens/profile/profile_screen.dart';
+import 'package:transporter/ui/screens/trips/add_trip.dart';
+import 'package:transporter/ui/screens/vechil/add_vechil.dart';
 import 'firebase_options.dart';
 import 'ui/screens/auth/login_screen.dart';
 
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Transporter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.indigo[800],
@@ -39,17 +42,9 @@ class MyApp extends StatelessWidget {
         inputDecorationTheme: const InputDecorationTheme(
           isDense: true,
           border: OutlineInputBorder(),
-          // contentPadding: EdgeInsets.symmetric(
-          //   vertical: 22,
-          //   horizontal: 26,
-          // ),
-          // labelStyle: TextStyle(
-          //   fontSize: 35,
-          //   decorationColor: Colors.red,
-          // ),
         ),
       ),
-      initialRoute: LoginScreen.name,
+      initialRoute: HomeScreen.name,
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
 
@@ -69,6 +64,15 @@ class MyApp extends StatelessWidget {
             break;
           case ProfileScreen.name:
             builder = (BuildContext _) => ProfileScreen();
+            break;
+          case AddTrip.name:
+            builder = (BuildContext _) => AddTrip();
+            break;
+          case PostLoad.name:
+            builder = (BuildContext _) => PostLoad();
+            break;
+          case AddVechil.name:
+            builder = (BuildContext _) => AddVechil();
             break;
           default:
             throw new Exception('Invalid route: ${settings.name}');

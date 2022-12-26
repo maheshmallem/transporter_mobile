@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:transporter/ui/screens/loads/post_load.dart';
+import 'package:transporter/ui/screens/vechil/add_vechil.dart';
 
 import '../../../data/data.dart';
-
 
 class HomeOptionsGrid extends StatelessWidget {
   const HomeOptionsGrid({super.key});
@@ -17,7 +18,9 @@ class HomeOptionsGrid extends StatelessWidget {
         return InkWell(
           onTap: () {
             if (homeOptions()[index].id == 4) {
-              Navigator.pushNamed(context, '/newLoad');
+              Navigator.pushNamed(context, PostLoad.name);
+            } else if (homeOptions()[index].id == 5) {
+              Navigator.pushNamed(context, AddVechil.name);
             } else
               Navigator.pushNamed(context, '/searchTrip');
           },

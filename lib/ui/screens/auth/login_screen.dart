@@ -14,9 +14,10 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  DatabaseService db = DatabaseService();
+
   var mobileNumberController = TextEditingController();
   bool _isBusy = false;
+   DatabaseService db = DatabaseService();
   updateisBusy(bool isBusy) {
     setState(() {
       _isBusy = isBusy;

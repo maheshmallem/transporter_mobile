@@ -5,6 +5,9 @@ import 'app_helper.dart';
 class DatabaseService {
   static const name = "DatabaseService";
   static const tbl_user = "tbl_user";
+  static const tbl_load = "tbl_load";
+  static const tbl_states = "tbl_states";
+  static const tbl_truck_model = "tbl_truck_model";
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<dynamic> createUser(Map<String, dynamic> user) async {
@@ -14,11 +17,26 @@ class DatabaseService {
     });
   }
 
+  Future<dynamic> createLoad(Map<String, dynamic> load) async {
+    return _db.collection(tbl_load).add(load).then((value) {
+      _db.collection(tbl_load).doc(value.id).update({"id": value.id});
+      return value;
+    });
+  }
+
   Future<QuerySnapshot> isMobileExist(String mobile) async {
     return _db
         .collection(tbl_user)
         .where("mobile_nummber", isEqualTo: mobile)
         .get();
+  }
+
+  Future<QuerySnapshot> getStatesList() async {
+    return _db.collection(tbl_states).get();
+  }
+
+  Future<QuerySnapshot> getTruckModels() async {
+    return _db.collection(tbl_truck_model).get();
   }
 
   Future<QuerySnapshot> getAccountDetails(String mobile) async {

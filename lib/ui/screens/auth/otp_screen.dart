@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pinput/pinput.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
+
+// import 'package:pinput/pinput.dart';
 import 'package:transporter/ui/screens/_home/home_screen.dart';
 import 'package:transporter/ui/screens/auth/login_screen.dart';
 
@@ -83,11 +85,32 @@ class OtpScreen extends StatelessWidget {
                       ]),
                   child: Column(
                     children: [
-                      Expanded(
-                        child: Pinput(
-                          controller: otpController,
-                          length: 6,
+                      PinCodeTextField(
+                        length: 6,
+                        obscureText: false,
+                        animationType: AnimationType.fade,
+                        pinTheme: PinTheme(
+                          shape: PinCodeFieldShape.box,
+                          borderRadius: BorderRadius.circular(5),
+                          fieldHeight: 50,
+                          fieldWidth: 40,
+                          activeFillColor: Colors.white,
                         ),
+                        animationDuration: Duration(milliseconds: 300),
+                        backgroundColor: Colors.blue.shade50,
+                        enableActiveFill: true,
+                        // errorAnimationController: otpController,
+                        controller: otpController,
+                        onCompleted: (v) {
+                          print("Completed");
+                        },
+                        beforeTextPaste: (text) {
+                          print("Allowing to paste $text");
+                          //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                          //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                          return true;
+                        },
+                        appContext: context, onChanged: (String value) {},
                       ),
                       const SizedBox(height: 12),
                       SizedBox(
