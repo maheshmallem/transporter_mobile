@@ -62,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           } else {
             //return Text(snapshot.data!.docs.first.get('active').toString());
             return Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: shadowDecoration(),
                 child: _edit
                     ? Column(children: [
