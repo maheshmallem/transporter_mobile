@@ -24,9 +24,9 @@ class OtpScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Padding(
           padding: EdgeInsets.all(size * 0.04),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
                 height: 200,
@@ -118,14 +118,14 @@ class OtpScreen extends StatelessWidget {
                           width: double.infinity,
                           child: ElevatedButton(
                               onPressed: () {
-                                if (otpController.text == "000000") {
+                                if (otpController.text.length > 4) {
                                   Navigator.pushReplacementNamed(
                                       context, HomeScreen.name);
                                 } else {
                                   showSnakbarMsg(context, str_invalid_otp);
                                 }
                               },
-                              child: const Text(str_login))),
+                              child: const Text(str_verify))),
                     ],
                   ))
             ],

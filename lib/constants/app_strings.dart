@@ -2,6 +2,7 @@
 
 const str_91 = "+91 ";
 const str_login = "Login";
+const str_verify = "Verify";
 const str_register = "Register";
 const str_dont_have_account = "Don't have account ?";
 const str_already_have_account = "Already have account ?";

@@ -1,9 +1,12 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:transporter/helpers/fire_store_helper.dart';
 import 'package:transporter/helpers/models/location_model.dart';
 import '../../../constants/app_strings.dart';
+import '../../../helpers/app_helper.dart';
 import '../../../helpers/app_styles.dart';
 import '../../widgets/auto_complete_location.dart';
 import '../../widgets/input_widget.dart';
@@ -81,7 +84,7 @@ class _AddVechilState extends State<AddVechil> {
             const SizedBox(height: 12),
             InputWidget(
               icon: Icons.nine_mp_outlined,
-              controller: TextEditingController(),
+              controller: vechilNumber,
               helptext: str_vechil_number,
             ),
             const SizedBox(height: 12),
@@ -250,7 +253,7 @@ class _AddVechilState extends State<AddVechil> {
                       )),
             ),
             TextFormField(
-              controller: quantityController,
+              controller: capacityController,
               keyboardType: TextInputType.number,
               maxLength: 5,
               decoration: InputDecoration(
@@ -280,32 +283,34 @@ class _AddVechilState extends State<AddVechil> {
             SizedBox(height: 8),
             InputWidget(
               icon: Icons.commit_sharp,
-              controller: TextEditingController(),
+              controller: numberOfTyresController,
               helptext: str_number_of_tyres,
             ),
             SizedBox(height: 8),
             InputWidget(
               icon: Icons.border_style_sharp,
-              controller: TextEditingController(),
+              controller: bodyTypeController,
               helptext: str_body_type,
             ),
             SizedBox(height: 8),
             InputWidget(
               icon: Icons.square_outlined,
-              controller: TextEditingController(),
+              controller: bodyDimensionController,
               helptext: str_body_dimentions,
             ),
             SizedBox(height: 8),
             InputWidget(
               icon: Icons.square_outlined,
-              controller: TextEditingController(),
+              controller: descController,
               helptext: str_description,
             ),
             SizedBox(height: 8),
             Container(
               child: ElevatedButton(
                 child: Text(str_add_vechil),
-                onPressed: () {},
+                onPressed: () {
+                  validate(context);
+                },
               ),
               height: 45,
               decoration: const BoxDecoration(boxShadow: [
@@ -323,5 +328,42 @@ class _AddVechilState extends State<AddVechil> {
         ),
       ),
     );
+  }
+
+  bool validate(BuildContext context) {
+    if (vechilNumber.text.isEmpty) {
+      showSnakbarMsg(context, "Vechil number required");
+      return false;
+    } else if (currentVechilLocation == null) {
+      showSnakbarMsg(context, "Current location required");
+      return false;
+    } else if (capacityController.text.isEmpty) {
+      showSnakbarMsg(context, "Capacity required");
+      return false;
+    } else if (numberOfTyresController.text.isEmpty) {
+      showSnakbarMsg(context, "Tyres count required");
+      return false;
+    } else if (bodyTypeController.text.isEmpty) {
+      showSnakbarMsg(context, "body type required");
+      return false;
+    } else if (bodyDimensionController.text.isEmpty) {
+      showSnakbarMsg(context, "body dimention required");
+      return false;
+    } else if (descController.text.isEmpty) {
+      showSnakbarMsg(context, "Description required");
+      return false;
+    } else if (statesList
+        .where((element) => element['selected'] == true)
+        .isEmpty) {
+      showSnakbarMsg(context, "Select Atlest one state");
+      return false;
+    } else if (truckModelsList
+        .where((element) => element['selected'] == true)
+        .isEmpty) {
+      showSnakbarMsg(context, "Select Vechil type");
+      return false;
+    } else {
+      return true;
+    }
   }
 }

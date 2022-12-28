@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      initialRoute: HomeScreen.name,
+      initialRoute: LoginScreen.name,
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
 
