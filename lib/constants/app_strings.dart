@@ -44,3 +44,5 @@ const str_add_vechil = "Add Vechil";
 const str_vechil_number = "Vechil number";
 const str_current_location = "Current Location";
 const str_select_truck_model = "Select Truck model";
+const str_select_rc = "Upload RC";
+const str_my_loads = "My Loads";

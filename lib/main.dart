@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:transporter/ui/screens/_home/home_screen.dart';
 import 'package:transporter/ui/screens/auth/otp_screen.dart';
 import 'package:transporter/ui/screens/auth/register_screen.dart';
+import 'package:transporter/ui/screens/loads/my_loads.dart';
 import 'package:transporter/ui/screens/loads/post_load.dart';
 import 'package:transporter/ui/screens/profile/profile_screen.dart';
 import 'package:transporter/ui/screens/trips/add_trip.dart';
@@ -74,10 +75,13 @@ class MyApp extends StatelessWidget {
           case AddVechil.name:
             builder = (BuildContext _) => AddVechil();
             break;
+          case MyLoadsScreen.name:
+            builder = (BuildContext _) => MyLoadsScreen();
+            break;
           default:
-            throw new Exception('Invalid route: ${settings.name}');
+            throw  Exception('Invalid route: ${settings.name}');
         }
-        return new MaterialPageRoute(builder: builder, settings: settings);
+        return MaterialPageRoute(builder: builder, settings: settings);
       },
     );
   }

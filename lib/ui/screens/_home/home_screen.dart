@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:transporter/ui/screens/loads/my_loads.dart';
 
 import 'home_drawer.dart';
 import 'home_options_grid.dart';
@@ -12,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      drawer: HomeDrawer(),
+      drawer: const HomeDrawer(),
       body: Container(
         padding: EdgeInsets.all(8),
         child: Column(
@@ -62,22 +63,27 @@ class HomeScreen extends StatelessWidget {
                   );
                 }).toList(),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Row(children: [
                 Expanded(
-                    child: Container(
-                  margin: const EdgeInsets.all(2.0),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: Theme.of(context).primaryColor)),
-                  child: Text(
-                    'My Loads',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                    child: InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(context, MyLoadsScreen.name);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor)),
+                    child: Text(
+                      'My Loads',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 )),
                 Expanded(

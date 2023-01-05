@@ -41,8 +41,9 @@ class _PostLoadState extends State<PostLoad> {
 
   var descriptionController = TextEditingController();
 
-  bool _isBusy = false;
+
   DatabaseService db = DatabaseService();
+  bool _isBusy = false;
   updateisBusy(bool isBusy) {
     setState(() {
       _isBusy = isBusy;

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'app_helper.dart';
 
 class DatabaseService {
@@ -8,6 +7,7 @@ class DatabaseService {
   static const tbl_load = "tbl_load";
   static const tbl_states = "tbl_states";
   static const tbl_truck_model = "tbl_truck_model";
+  static const tbl_user_vechils = "tbl_user_vechils";
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<dynamic> createUser(Map<String, dynamic> user) async {
@@ -24,10 +24,28 @@ class DatabaseService {
     });
   }
 
+  Future<dynamic> addVechil(Map<String, dynamic> load) async {
+    return _db.collection(tbl_user_vechils).add(load).then((value) {
+      _db
+          .collection(tbl_user_vechils)
+          .doc(value.id)
+          .update({"id": value.id, "verified": false});
+      return value;
+    });
+  }
+
   Future<QuerySnapshot> isMobileExist(String mobile) async {
     return _db
         .collection(tbl_user)
         .where("mobile_nummber", isEqualTo: mobile)
+        .get();
+  }
+
+  Future<QuerySnapshot> getListwithWhere(
+      String tblName, String whereField, String whereValue) async {
+    return _db
+        .collection(tblName)
+        .where(whereField, isEqualTo: whereValue)
         .get();
   }
 

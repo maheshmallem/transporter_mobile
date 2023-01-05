@@ -1,7 +1,11 @@
 // ignore_for_file: unnecessary_null_comparison
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:transporter/helpers/fire_store_helper.dart';
 import 'package:transporter/helpers/models/location_model.dart';
@@ -21,7 +25,7 @@ class AddVechil extends StatefulWidget {
 
 class _AddVechilState extends State<AddVechil> {
   DatabaseService db = DatabaseService();
-  // String imageUrl = "";
+  String imageUrlRC = "";
   List<Map<String, dynamic>> statesList = [];
   List<Map<String, dynamic>> truckModelsList = [];
   var vechilNumber = TextEditingController();
@@ -66,6 +70,13 @@ class _AddVechilState extends State<AddVechil> {
       }
     });
     super.initState();
+  }
+
+  bool _isBusy = false;
+  updateisBusy(bool isBusy) {
+    setState(() {
+      _isBusy = isBusy;
+    });
   }
 
   @override
@@ -161,34 +172,7 @@ class _AddVechilState extends State<AddVechil> {
                               )),
                         ))
                     .toList()),
-            /*
-            ElevatedButton(
-              child: Text("upload"),
-              onPressed: () async {
-                FirebaseStorage _storage = FirebaseStorage.instance;
-                final ImagePicker _picker = ImagePicker();
-                // Pick an image
-                final XFile? image =
-                    await _picker.pickImage(source: ImageSource.gallery);
-                print("Selected image path:${image!.path}");
-                Reference reference = FirebaseStorage.instance
-                    .ref()
-                    .child('images/${image.name}');
-
-                UploadTask uploadTask = reference.putFile(File(image.path));
-
-                TaskSnapshot snapshot = await uploadTask;
-                String url = await snapshot.ref.getDownloadURL();
-
-                setState(() {
-                  imageUrl = url;
-                });
-              },
-            ),
-            */
             const SizedBox(height: 12),
-            Text(str_select_truck_model),
-            const SizedBox(height: 4),
             Container(
               height: 200,
               child: GridView.builder(
@@ -298,30 +282,105 @@ class _AddVechilState extends State<AddVechil> {
               controller: bodyDimensionController,
               helptext: str_body_dimentions,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             InputWidget(
               icon: Icons.square_outlined,
               controller: descController,
               helptext: str_description,
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 4),
+            Text(str_select_rc),
+            const SizedBox(height: 4),
             Container(
-              child: ElevatedButton(
-                child: Text(str_add_vechil),
-                onPressed: () {
-                  validate(context);
-                },
-              ),
-              height: 45,
-              decoration: const BoxDecoration(boxShadow: [
-                BoxShadow(
-                  offset: Offset(2, 2),
-                  blurRadius: 4,
-                  color: Color.fromRGBO(0, 0, 0, 0.16),
-                )
-              ]),
-              width: double.infinity,
+                width: double.infinity,
+                height: 200,
+                child: imageUrlRC.isEmpty
+                    ? const Icon(
+                        Icons.image,
+                        size: 100,
+                        color: Colors.grey,
+                      )
+                    : Image.network(imageUrlRC)),
+            ElevatedButton(
+              child: const Text(str_select_rc),
+              onPressed: () async {
+                FirebaseStorage _storage = FirebaseStorage.instance;
+                final ImagePicker _picker = ImagePicker();
+                // Pick an image
+                final XFile? image =
+                    await _picker.pickImage(source: ImageSource.gallery);
+                print("Selected image path:${image!.path}");
+                Reference reference = FirebaseStorage.instance
+                    .ref()
+                    .child('images/${image.name}');
+
+                UploadTask uploadTask = reference.putFile(File(image.path));
+
+                TaskSnapshot snapshot = await uploadTask;
+                String url = await snapshot.ref.getDownloadURL();
+
+                setState(() {
+                  imageUrlRC = url;
+                });
+              },
             ),
+            const SizedBox(height: 8),
+            if (_isBusy)
+              CircularProgressIndicator()
+            else
+              Container(
+                height: 45,
+                decoration: const BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    offset: Offset(2, 2),
+                    blurRadius: 4,
+                    color: Color.fromRGBO(0, 0, 0, 0.16),
+                  )
+                ]),
+                width: double.infinity,
+                child: ElevatedButton(
+                  child: Text(str_add_vechil),
+                  onPressed: () {
+                    if (validate(context)) {
+                      var statesList = [];
+                      statesList
+                          .where((element) => element['selected'] == true)
+                          .forEach((element) {
+                        statesList.add(element['name']);
+                      });
+                      Map<String, dynamic> postData = {
+                        "vechil_number": vechilNumber.text,
+                        "location": currentVechilLocation!.location_name,
+                        "location_latitude": currentVechilLocation!.latitude,
+                        "location_longitude": currentVechilLocation!.longitude,
+                        "all_india_permit": allIndiaPermit,
+                        "selected_states": statesList.toString(),
+                        "truck_model": truckModelsList.firstWhere(
+                            (element) => element['selected'] == true)['name'],
+                        "capacity": capacityController.text,
+                        "number_of_tyres": numberOfTyresController.text,
+                        "body_type": bodyTypeController.text,
+                        "body_dimension": bodyDimensionController.text,
+                        "rc_image": imageUrlRC,
+                        "created_date": DateTime.now().toIso8601String(),
+                        "updated_date": DateTime.now().toIso8601String(),
+                        "description": descController.text,
+                        "created_user_id": "cXo4NlKeypD9D0J70hL6"
+                      };
+                      db.addVechil(postData).then((value) {
+                        updateisBusy(false);
+                        showSnakbarMsg(context, "Created Successfully");
+                        Navigator.pop(context);
+                      }).onError((error, stackTrace) {
+                        showSnakbarMsg(context, "ERROR : ${error.toString()}}");
+                        updateisBusy(false);
+                      });
+                    } else {
+                      updateisBusy(false);
+                    }
+                  },
+                ),
+              ),
             SizedBox(height: 8),
             SizedBox(height: 8),
           ],
