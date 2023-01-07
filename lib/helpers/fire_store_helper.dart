@@ -49,6 +49,12 @@ class DatabaseService {
         .get();
   }
 
+  Future<void> deleteLoad(String recordId , bool delete) async {
+//         .setData(toMap(item), merge: true);
+
+    _db.collection(tbl_load).doc(recordId).update({"deleted": delete});
+  }
+
   Future<QuerySnapshot> getStatesList() async {
     return _db.collection(tbl_states).get();
   }
