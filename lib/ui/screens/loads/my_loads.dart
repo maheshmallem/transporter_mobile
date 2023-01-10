@@ -31,10 +31,12 @@ class _MyLoadsScreenState extends State<MyLoadsScreen> {
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox(
-                height: 40,
-                width: 40,
-                child: Center(child: CircularProgressIndicator()),
+              return const Center(
+                child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: CircularProgressIndicator(),
+                ),
               );
             } else {
               if (snapshot.hasData) {
@@ -136,14 +138,63 @@ class _MyLoadsScreenState extends State<MyLoadsScreen> {
                                   ),
                                   TextButton(
                                       onPressed: () {
-                                        db
-                                            .deleteLoad(
-                                                snapshot.data!.docs[index]['id']
-                                                    .toString(),
-                                                !deleted)
-                                            .then((value) {
-                                          setState(() {});
-                                        });
+                                        if (deleted == false) {
+                                          showDialog<String>(
+                                              context: context,
+                                              builder: (BuildContext context) =>
+                                                  AlertDialog(
+                                                    shape: const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    32.0))),
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    title: const Text('Delete'),
+                                                    content: const Text(
+                                                        'Are you sure you want to delete this item'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context,
+                                                                'Cancel'),
+                                                        child: const Text(
+                                                            'Cancel'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          db
+                                                              .deleteLoad(
+                                                                  snapshot
+                                                                      .data!
+                                                                      .docs[
+                                                                          index]
+                                                                          ['id']
+                                                                      .toString(),
+                                                                  !deleted)
+                                                              .then((value) {
+                                                            Navigator.pop(
+                                                                context,
+                                                                'Cancel');
+                                                            setState(() {});
+                                                          });
+                                                        },
+                                                        child: const Text('OK'),
+                                                      ),
+                                                    ],
+                                                  ));
+                                        } else {
+                                          db
+                                              .deleteLoad(
+                                                  snapshot
+                                                      .data!.docs[index]['id']
+                                                      .toString(),
+                                                  !deleted)
+                                              .then((value) {
+                                            setState(() {});
+                                          });
+                                        }
                                       },
                                       child: Text(
                                         deleted ? "Un-Delete" : "Delete",
