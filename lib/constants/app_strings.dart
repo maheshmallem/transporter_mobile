@@ -40,6 +40,7 @@ const str_body_type = "Body type";
 const str_body_dimentions = "Body Dimentions";
 const str_all_india_permint = "All India permint";
 const str_add_vechil = "Add Vechil";
+const str_add_trip = "Add Trip";
 
 const str_vechil_number = "Vechil number";
 const str_current_location = "Current Location";

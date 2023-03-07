@@ -8,6 +8,7 @@ class DatabaseService {
   static const tbl_states = "tbl_states";
   static const tbl_truck_model = "tbl_truck_model";
   static const tbl_user_vechils = "tbl_user_vechils";
+  static const tbl_trip = "tbl_trip";
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Future<dynamic> createUser(Map<String, dynamic> user) async {
@@ -34,6 +35,13 @@ class DatabaseService {
     });
   }
 
+  Future<dynamic> addTrip(Map<String, dynamic> load) async {
+    return _db.collection(tbl_trip).add(load).then((value) {
+      _db.collection(tbl_trip).doc(value.id).update({"id": value.id});
+      return value;
+    });
+  }
+
   Future<QuerySnapshot> isMobileExist(String mobile) async {
     return _db
         .collection(tbl_user)
@@ -42,20 +50,57 @@ class DatabaseService {
   }
 
   Future<QuerySnapshot> getListwithWhere(
-      String tblName, String whereField, String whereValue) async {
+      String tblName, String whereField, String whereValue) {
     return _db
         .collection(tblName)
         .where(whereField, isEqualTo: whereValue)
         .get();
   }
 
-  Future<void> deleteLoad(String recordId , bool delete) async {
+  Future<QuerySnapshot> getListwithWherePagination(
+      {required String tblName,
+      required String whereField,
+      required String whereValue,
+      List<DocumentSnapshot>? documentList,
+      int pageSize = 10}) async {
+    if (documentList == null || documentList.isEmpty) {
+      return _db
+          .collection(tblName)
+          .where(whereField, isEqualTo: whereValue)
+          .limit(pageSize)
+          .get();
+    } else {
+      return _db
+          .collection(tblName)
+          .where(whereField, isEqualTo: whereValue)
+          .startAfterDocument(documentList![documentList.length - 1])
+          .limit(pageSize)
+          .get();
+    }
+  }
+
+  Future<List<DocumentSnapshot>> fetchNextList(
+      List<DocumentSnapshot>? documentList) async {
+    if (documentList == null) {
+      return (await _db.collection(tbl_load).limit(5).get()).docs;
+    } else {
+      return (await _db
+              .collection(tbl_load)
+              .startAfterDocument(documentList[documentList.length - 1])
+              .limit(5)
+              .get())
+          .docs;
+    }
+  }
+
+  Future<void> deleteLoad(String recordId, bool delete) async {
 //         .setData(toMap(item), merge: true);
 
     _db.collection(tbl_load).doc(recordId).update({"deleted": delete});
   }
 
-  Future<QuerySnapshot> getStatesList() async {
+  Future<QuerySnapshot> getStatesList(
+      {int startRecord = 0, int end_record = 100}) async {
     return _db.collection(tbl_states).get();
   }
 
@@ -70,12 +115,21 @@ class DatabaseService {
         .get();
   }
 
-  Future<dynamic> getSingleRecord(String collection, String id) async {
-    var snap = await _db.collection(collection).doc(id).get();
-    appLog(name, "getSingleRecord($collection,$id)", snap.data().toString());
-    return snap;
+  Future<QuerySnapshot> getAccountSingle(String strId) async {
+    return _db.collection(tbl_user).where("id", isEqualTo: strId).get();
   }
+
+  Future<QuerySnapshot> getSingleRecord(String table, String strId) async {
+    return _db.collection(table).where("id", isEqualTo: strId).get();
+  }
+
+  // Future<dynamic> getSingleRecord(String collection, String id) async {
+  //   var snap = await _db.collection(collection).doc(id).get();
+  //   appLog(name, "getSingleRecord($collection,$id)", snap.data().toString());
+  //   return snap;
+  // }
 }
+
 
 // class DatabaseService<T> {
 //   final String collection;

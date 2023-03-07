@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:transporter/ui/screens/loads/my_loads.dart';
+import 'package:transporter/ui/screens/trips/my_vechils.dart';
 
 import 'home_drawer.dart';
 import 'home_options_grid.dart';
@@ -69,6 +70,7 @@ class HomeScreen extends StatelessWidget {
                     child: InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, MyLoadsScreen.name);
+                    
                   },
                   child: Container(
                     margin: const EdgeInsets.all(2.0),
@@ -87,19 +89,23 @@ class HomeScreen extends StatelessWidget {
                   ),
                 )),
                 Expanded(
-                    child: Container(
-                  margin: const EdgeInsets.all(2.0),
-                  padding: const EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border:
-                          Border.all(color: Theme.of(context).primaryColor)),
-                  child: Text(
-                    'My Trips',
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w600),
-                    textAlign: TextAlign.center,
+                    child: InkWell(
+                  onTap: () =>
+                      Navigator.pushNamed(context, MyVechilsScreen.name),
+                  child: Container(
+                    margin: const EdgeInsets.all(2.0),
+                    padding: const EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border:
+                            Border.all(color: Theme.of(context).primaryColor)),
+                    child: Text(
+                      'My Trips',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 )),
               ]),

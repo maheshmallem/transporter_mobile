@@ -7,7 +7,10 @@ import 'package:transporter/ui/screens/loads/my_loads.dart';
 import 'package:transporter/ui/screens/loads/post_load.dart';
 import 'package:transporter/ui/screens/profile/profile_screen.dart';
 import 'package:transporter/ui/screens/trips/add_trip.dart';
+import 'package:transporter/ui/screens/trips/my_vechils.dart';
+import 'package:transporter/ui/screens/trips/search_trip.dart';
 import 'package:transporter/ui/screens/vechil/add_vechil.dart';
+import 'package:transporter/ui/searchVechil/search_load.dart';
 import 'firebase_options.dart';
 import 'ui/screens/auth/login_screen.dart';
 
@@ -78,8 +81,17 @@ class MyApp extends StatelessWidget {
           case MyLoadsScreen.name:
             builder = (BuildContext _) => MyLoadsScreen();
             break;
+          case MyVechilsScreen.name:
+            builder = (BuildContext _) => MyVechilsScreen();
+            break;
+          case SearchLoad.name:
+            builder = (BuildContext _) => SearchLoad();
+            break;
+          case SearchTrip.name:
+            builder = (BuildContext _) => SearchTrip();
+            break;
           default:
-            throw  Exception('Invalid route: ${settings.name}');
+            throw Exception('Invalid route: ${settings.name}');
         }
         return MaterialPageRoute(builder: builder, settings: settings);
       },

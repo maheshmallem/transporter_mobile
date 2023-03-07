@@ -30,6 +30,16 @@ List<HomeOptionsModel> homeOptions() => [
           id: 5,
           name: 'Add Vechil',
           url:
+              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
+      HomeOptionsModel(
+          id: 6,
+          name: 'Post Trip',
+          url:
+              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
+      HomeOptionsModel(
+          id: 7,
+          name: 'Loads',
+          url:
               'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png')
     ];
 

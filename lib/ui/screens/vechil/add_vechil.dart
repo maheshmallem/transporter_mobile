@@ -12,6 +12,7 @@ import 'package:transporter/helpers/models/location_model.dart';
 import '../../../constants/app_strings.dart';
 import '../../../helpers/app_helper.dart';
 import '../../../helpers/app_styles.dart';
+import '../../widgets/add_photo.dart';
 import '../../widgets/auto_complete_location.dart';
 import '../../widgets/input_widget.dart';
 
@@ -24,6 +25,7 @@ class AddVechil extends StatefulWidget {
 }
 
 class _AddVechilState extends State<AddVechil> {
+  List<String> imagesList = [];
   DatabaseService db = DatabaseService();
   String imageUrlRC = "";
   List<Map<String, dynamic>> statesList = [];
@@ -325,6 +327,14 @@ class _AddVechilState extends State<AddVechil> {
               },
             ),
             const SizedBox(height: 8),
+            
+            AddPhoto(
+              onSelected: (str) {
+                setState(() {
+                  imagesList.add(str);
+                });
+              },
+            ),
             if (_isBusy)
               CircularProgressIndicator()
             else

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:transporter/ui/screens/loads/post_load.dart';
+import 'package:transporter/ui/screens/trips/add_trip.dart';
+import 'package:transporter/ui/screens/trips/search_trip.dart';
 import 'package:transporter/ui/screens/vechil/add_vechil.dart';
+import 'package:transporter/ui/searchVechil/search_load.dart';
 
 import '../../../data/data.dart';
 
@@ -21,8 +24,12 @@ class HomeOptionsGrid extends StatelessWidget {
               Navigator.pushNamed(context, PostLoad.name);
             } else if (homeOptions()[index].id == 5) {
               Navigator.pushNamed(context, AddVechil.name);
+            } else if (homeOptions()[index].id == 6) {
+              Navigator.pushNamed(context, AddTrip.name);
+            } else if (homeOptions()[index].id == 7) {
+              Navigator.pushNamed(context, SearchLoad.name);
             } else
-              Navigator.pushNamed(context, '/searchTrip');
+              Navigator.pushNamed(context, SearchTrip.name);
           },
           child: Card(
             shape: RoundedRectangleBorder(

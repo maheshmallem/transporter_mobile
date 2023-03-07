@@ -3,3 +3,4 @@ import 'package:transporter/helpers/models/location_model.dart';
 
 typedef locationCallback = Function(LocationModel location);
 typedef DateCallback = Function(DateTime date);
+typedef StringCallback = Function(String str);
