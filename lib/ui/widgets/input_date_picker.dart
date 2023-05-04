@@ -31,6 +31,7 @@ class InputDatePicker extends StatelessWidget {
   }
 
   displayCakender(BuildContext context) {
+    TimeOfDay timeOfDay = TimeOfDay(hour: 3, minute: 10);
     showDatePicker(
             context: context,
             initialDate: DateTime.now(),

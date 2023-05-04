@@ -16,6 +16,8 @@ const str_invalid_otp = "OTP invalid";
 const str_name_required = "Name required and minumum 4 charectors";
 const str_email_invalid = "Invalid Email";
 const str_error_mobile_exist = "Mobile number already exist";
+const str_erro_mobile_number_not_exist =
+    'Mobile number not exist please register';
 
 // USERNAME
 
@@ -47,3 +49,4 @@ const str_current_location = "Current Location";
 const str_select_truck_model = "Select Truck model";
 const str_select_rc = "Upload RC";
 const str_my_loads = "My Loads";
+const str_my_Trips = "My Trips";

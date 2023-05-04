@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_strings.dart';
+import '../../../helpers/appPref.dart';
 import '../../../helpers/app_helper.dart';
 import '../../../helpers/app_styles.dart';
 import '../../../helpers/fire_store_helper.dart';
@@ -30,6 +31,7 @@ class _AddTripState extends State<AddTrip> {
   var priceController = TextEditingController();
   var startDateController = TextEditingController();
   String? selectedVechilId;
+  String? selectedVechilModel;
   var startDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
@@ -110,12 +112,19 @@ class _AddTripState extends State<AddTrip> {
               ),
               const SizedBox(height: 10),
               DropDownVechil(
+
                 onSelected: (String str) {
                   setState(() {
                     selectedVechilId = str;
                   });
                   print("selected Vechil =>$str");
-                },
+                }, onSelectedModels: (String str) {
+
+                  selectedVechilModel = str;
+                  setState(() {
+
+                  });
+              },
               ),
               const SizedBox(height: 10),
               InputWidget(
@@ -146,17 +155,19 @@ class _AddTripState extends State<AddTrip> {
                               "id": "",
                               "from_location": fromLocationController.text,
                               "to_location": toLocationController.text,
-                              "from_latitude": fromLocation!.latitude,
-                              "from_longitude": fromLocation!.longitude,
-                              "to_latitude": toLocation!.latitude,
-                              "to_longitude": toLocation!.longitude,
+                              "fromGeoTag": GeoPoint(fromLocation!.latitude,
+                                  fromLocation!.longitude),
+                              "toGeoTag": GeoPoint(
+                                  toLocation!.latitude, toLocation!.longitude),
                               "price": priceController.text,
                               "start_date": startDate.toIso8601String(),
                               "vechil_id": selectedVechilId,
+                              "truck_model":selectedVechilModel,
                               "desc": descController.text,
                               "created_date": DateTime.now().toIso8601String(),
                               "updated_date": DateTime.now().toIso8601String(),
-                              "created_user_id": "cXo4NlKeypD9D0J70hL6"
+                              "created_user_id":
+                                  SharedPrefs.getString(SharedPrefs.userId)
                             };
                           } catch (ex) {
                             print("ERROR ${ex.toString()}");

@@ -1,6 +1,7 @@
 import 'home_options_model.dart';
 
 List<HomeOptionsModel> homeOptions() => [
+      /*
       HomeOptionsModel(
           id: 0,
           name: 'Commercial Vehicle',
@@ -21,16 +22,12 @@ List<HomeOptionsModel> homeOptions() => [
           name: 'Auto',
           url:
               'https://cdn3.iconfinder.com/data/icons/logistics-154/256/delivery_truck_shipping_truck_truck_delivery_transport_shipping.png'),
+*/
       HomeOptionsModel(
           id: 4,
           name: 'Post Load',
           url:
               'https://cdn3.iconfinder.com/data/icons/commercially-3d/512/4._Packagin.png'),
-      HomeOptionsModel(
-          id: 5,
-          name: 'Add Vechil',
-          url:
-              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
       HomeOptionsModel(
           id: 6,
           name: 'Post Trip',
@@ -38,9 +35,19 @@ List<HomeOptionsModel> homeOptions() => [
               'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
       HomeOptionsModel(
           id: 7,
-          name: 'Loads',
+          name: 'Search Load',
           url:
-              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png')
+              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
+      HomeOptionsModel(
+          id: 9,
+          name: 'Search Trip',
+          url:
+              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
+      HomeOptionsModel(
+          id: 5,
+          name: 'Add Vechil',
+          url:
+              'https://cdn1.iconfinder.com/data/icons/e-commerce-655/512/Truck_Shipping.png'),
     ];
 
 List<HomeOptionsModel> homeMenu() => [
@@ -55,17 +62,17 @@ List<HomeOptionsModel> homeMenu() => [
           url:
               'https://cdn1.iconfinder.com/data/icons/avatars-150/512/Beard.png'),
       HomeOptionsModel(
-          id: 0,
+          id: 2,
           name: 'Settings',
           url:
               'https://cdn1.iconfinder.com/data/icons/bam-free-3d/512/Gear.png'),
       HomeOptionsModel(
-          id: 0,
+          id: 3,
           name: 'Support',
           url:
               'https://cdn1.iconfinder.com/data/icons/online-marketing-98/512/customer_service.png'),
       HomeOptionsModel(
-          id: 0,
+          id: 4,
           name: 'Logout',
           url:
               'https://cdn1.iconfinder.com/data/icons/3d-essentials-front/512/Log_In.png'),

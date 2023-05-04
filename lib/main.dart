@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:transporter/ui/screens/_home/home_screen.dart';
 import 'package:transporter/ui/screens/auth/otp_screen.dart';
 import 'package:transporter/ui/screens/auth/register_screen.dart';
@@ -10,17 +11,26 @@ import 'package:transporter/ui/screens/trips/add_trip.dart';
 import 'package:transporter/ui/screens/trips/my_vechils.dart';
 import 'package:transporter/ui/screens/trips/search_trip.dart';
 import 'package:transporter/ui/screens/vechil/add_vechil.dart';
-import 'package:transporter/ui/searchVechil/search_load.dart';
+import 'package:transporter/ui/searchloads/search_load.dart';
+import 'data/provider/user_notifier.dart';
 import 'firebase_options.dart';
+import 'helpers/appPref.dart';
 import 'ui/screens/auth/login_screen.dart';
+import 'ui/screens/trips/my_trips.dart';
 
 Future<void> main() async {
   // Firebase.initializeApp();
+
   WidgetsFlutterBinding.ensureInitialized();
+  Provider.debugCheckInvalidValueType = null;
+  SharedPrefs.init();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  runApp(MultiProvider(providers: [
+    Provider<UserProvider>(create: (_) => UserProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -48,7 +58,9 @@ class MyApp extends StatelessWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      initialRoute: LoginScreen.name,
+      initialRoute: SharedPrefs.getBool(SharedPrefs.islogin) == true
+          ? HomeScreen.name
+          : LoginScreen.name,
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
 
@@ -60,8 +72,8 @@ class MyApp extends StatelessWidget {
             builder = (BuildContext _) => RegistrationScreen();
             break;
           case OtpScreen.name:
-            builder = (BuildContext _) =>
-                OtpScreen(mobileNumber: settings.arguments.toString());
+            builder =
+                (BuildContext _) => OtpScreen(arguements: settings.arguments);
             break;
           case HomeScreen.name:
             builder = (BuildContext _) => HomeScreen();
@@ -90,6 +102,10 @@ class MyApp extends StatelessWidget {
           case SearchTrip.name:
             builder = (BuildContext _) => SearchTrip();
             break;
+          case MyTripsScreen.name:
+            builder = (BuildContext _) => MyTripsScreen();
+            break;
+
           default:
             throw Exception('Invalid route: ${settings.name}');
         }

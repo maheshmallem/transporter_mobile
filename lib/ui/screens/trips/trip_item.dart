@@ -28,7 +28,8 @@ class TripListItem extends StatelessWidget {
 
       start_date = outputDate;
     } catch (e) {}
-    return Card(
+    return
+    Card(
         child: Container(
             padding: const EdgeInsets.all(8),
             child: Column(children: [
@@ -125,5 +126,6 @@ class TripListItem extends StatelessWidget {
                     }
                   }),
             ])));
+  
   }
 }

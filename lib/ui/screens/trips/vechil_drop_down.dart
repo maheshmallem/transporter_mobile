@@ -5,8 +5,9 @@ import '../../../helpers/call_backs.dart';
 import '../../../helpers/fire_store_helper.dart';
 
 class DropDownVechil extends StatefulWidget {
+  StringCallback onSelectedModels;
   StringCallback onSelected;
-  DropDownVechil({super.key, required this.onSelected});
+  DropDownVechil({super.key, required this.onSelected,required this.onSelectedModels});
 
   @override
   State<DropDownVechil> createState() => _DropDownVechilState();
@@ -69,6 +70,7 @@ class _DropDownVechilState extends State<DropDownVechil> {
               }).toList(),
 
               onChanged: (val) {
+                widget.onSelectedModels(val!['truck_model']);
                 widget.onSelected(val!['id']);
                 setState(() {
                   selectedItem = val;

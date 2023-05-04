@@ -1,12 +1,13 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:transporter/helpers/models/location_model.dart';
-
 import 'config.dart';
 import 'models/places_responce.dart';
 
 Future<List<LocationModel>> getLocationResults(String qr) {
   List<LocationModel> options = [];
-  print("CALLED API");
+
   return http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$qr&language=en&region=en&key=$map_key"),
@@ -19,5 +20,23 @@ Future<List<LocationModel>> getLocationResults(String qr) {
     }
 
     return options;
+  });
+}
+
+Future<dynamic> otpLogin(String strMobile) async {
+  return await http
+      .get(Uri.parse(
+          'https://2factor.in/API/V1/$two_factor_key/SMS/$strMobile/AUTOGEN/OTP1'))
+      .then((response) {
+    return json.decode(response.body);
+  });
+}
+
+Future<dynamic> verifyOtp(String sessionId, String otp) async {
+  String url =
+      'https://2factor.in/API/V1/$two_factor_key/SMS/VERIFY/$sessionId/$otp';
+  print("Session Verify ==> $url");
+  return await http.get(Uri.parse(url)).then((response) {
+    return json.decode(response.body);
   });
 }

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../helpers/call_backs.dart';
+
 class InputTimePicker extends StatelessWidget {
   var controller = TextEditingController();
+  TimeCallback timeCallback;
   String helptext;
-  InputTimePicker({
-    super.key,
-    required this.controller,
-    required this.helptext,
-  });
+  InputTimePicker(
+      {super.key,
+      required this.controller,
+      required this.helptext,
+      required this.timeCallback});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +31,7 @@ class InputTimePicker extends StatelessWidget {
   displayCakender(BuildContext context) {
     showTimePicker(context: context, initialTime: TimeOfDay.now())
         .then((value) {
+      timeCallback(value!);
       controller.text = value!.format(context);
     });
   }

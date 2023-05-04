@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transporter/helpers/api_helper.dart';
 import 'package:transporter/helpers/fire_store_helper.dart';
 import 'package:transporter/ui/screens/auth/otp_screen.dart';
 import 'package:transporter/ui/screens/auth/register_screen.dart';
@@ -14,10 +15,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   var mobileNumberController = TextEditingController();
   bool _isBusy = false;
-   DatabaseService db = DatabaseService();
+  DatabaseService db = DatabaseService();
   updateisBusy(bool isBusy) {
     setState(() {
       _isBusy = isBusy;
@@ -102,14 +102,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                           "mobile numer => ${value.docs.length}");
                                       if (value.docs.isEmpty) {
                                         updateisBusy(false);
-                                        showSnakbarMsg(
-                                            context, str_error_mobile_exist);
+                                        showSnakbarMsg(context,
+                                            str_erro_mobile_number_not_exist);
                                       } else {
+                                        // Mobile Number Already exist need to verify OTP
                                         updateisBusy(false);
+                                        /*
                                         Navigator.pushReplacementNamed(
                                             context, OtpScreen.name,
                                             arguments:
                                                 mobileNumberController.text);
+                                                */
+
+                                        otpLogin(mobileNumberController.text)
+                                            .then((value) {
+                                          var attributes = {
+                                            'number':
+                                                mobileNumberController.text,
+                                            'SessionId':
+                                                value['Details'].toString()
+                                          };
+                                          Navigator.pushReplacementNamed(
+                                              context, OtpScreen.name,
+                                              arguments: attributes
+                                                  as Map<String, String>);
+                                        });
                                       }
                                     });
                                   }

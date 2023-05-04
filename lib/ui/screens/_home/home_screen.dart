@@ -1,14 +1,46 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:transporter/helpers/appPref.dart';
 import 'package:transporter/ui/screens/loads/my_loads.dart';
+import 'package:transporter/ui/screens/trips/my_trips.dart';
 import 'package:transporter/ui/screens/trips/my_vechils.dart';
 
+import '../../../data/provider/user_notifier.dart';
+import '../../../helpers/fire_store_helper.dart';
 import 'home_drawer.dart';
 import 'home_options_grid.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   static const name = "\home";
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  DatabaseService db = DatabaseService();
+  String username = '';
+  @override
+  void initState() {
+    // Intilize User Data
+    db
+        .getAccountDetails(SharedPrefs.getString(SharedPrefs.mobileNumber)!)
+        .then((value) {
+      print('===>  Login User details : ${value.docs.first.data()}');
+      SharedPrefs.setString(SharedPrefs.userId, value.docs.first.id);
+      Provider.of<UserProvider>(context, listen: false)
+          .updateUserData(value.docs.first.data());
+
+      setState(() {
+        username = value.docs.first['first_name'] +
+            ' ' +
+            value.docs.first['last_name'];
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                         fontSize: 18),
                   ),
                   Text(
-                    "Mahesh Mallem",
+                    username.toUpperCase(),
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -70,7 +102,6 @@ class HomeScreen extends StatelessWidget {
                     child: InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, MyLoadsScreen.name);
-                    
                   },
                   child: Container(
                     margin: const EdgeInsets.all(2.0),
@@ -90,8 +121,7 @@ class HomeScreen extends StatelessWidget {
                 )),
                 Expanded(
                     child: InkWell(
-                  onTap: () =>
-                      Navigator.pushNamed(context, MyVechilsScreen.name),
+                  onTap: () => Navigator.pushNamed(context, MyTripsScreen.name),
                   child: Container(
                     margin: const EdgeInsets.all(2.0),
                     padding: const EdgeInsets.all(10.0),

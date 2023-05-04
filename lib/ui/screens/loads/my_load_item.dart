@@ -22,24 +22,6 @@ class _MyLoadListItemState extends State<MyLoadListItem> {
       deleted = widget.data['deleted'];
     } catch (e) {}
 
-    String start_date = widget.data['start_date'];
-
-    try {
-      // start_date = '2021-01-26T03:17:00.000000Z';
-      DateTime parseDate =
-          new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'").parse(start_date);
-      var inputDate = DateTime.parse(parseDate.toString());
-      var outputFormat = DateFormat('dd-MM-yyyy');
-      var outputDate = outputFormat.format(inputDate);
-      // start_date = DateFormat("yyyy-MM-dd")
-      //     .parse("2002-02-27T14:00:00-0500"
-      //         // data['start_date']
-      //         )
-      //     .toString();
-
-      start_date = outputDate;
-    } catch (e) {}
-    // start_date = "mahesh";
     return Container(
         child: Card(
       child: Container(
@@ -168,28 +150,11 @@ class _MyLoadListItemState extends State<MyLoadListItem> {
             ),
             Row(
               children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Text("Start Date :",
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
-                      Text(start_date, style: const TextStyle(fontSize: 12))
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Text("Material :",
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.bold)),
-                      Text(
-                          "${widget.data['material_name']} (${widget.data['qty']}  ${widget.data['qty_type']})",
-                          style: const TextStyle(fontSize: 12))
-                    ],
-                  ),
-                )
+                const Text("Start Date :",
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                Text(widget.data['start_date'].toDate().toString() as String,
+                    style: const TextStyle(fontSize: 12))
               ],
             ),
           ],

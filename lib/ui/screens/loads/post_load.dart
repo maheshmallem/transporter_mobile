@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:transporter/constants/app_strings.dart';
 
+import '../../../helpers/appPref.dart';
 import '../../../helpers/app_helper.dart';
 import '../../../helpers/app_styles.dart';
 import '../../../helpers/fire_store_helper.dart';
@@ -41,7 +43,6 @@ class _PostLoadState extends State<PostLoad> {
 
   var descriptionController = TextEditingController();
 
-
   DatabaseService db = DatabaseService();
   bool _isBusy = false;
   updateisBusy(bool isBusy) {
@@ -49,7 +50,8 @@ class _PostLoadState extends State<PostLoad> {
       _isBusy = isBusy;
     });
   }
-String weightType = "Tonnes";
+
+  String weightType = "Tonnes";
   int qtyIndex = 0;
   updateQtyIndex(int index) {
     setState(() {
@@ -143,6 +145,12 @@ String weightType = "Tonnes";
                   InputTimePicker(
                     controller: startTimeController,
                     helptext: str_start_time,
+                    timeCallback: (TimeOfDay time) {
+                      setState(() {
+                        startDate = startDate.add(
+                            Duration(hours: time.hour, minutes: time.minute));
+                      });
+                    },
                   ),
                   const SizedBox(height: 10),
                   InputWidget(
@@ -218,12 +226,12 @@ String weightType = "Tonnes";
                                     "from_location":
                                         fromLocationController.text,
                                     "to_location": toLocationController.text,
-                                    "from_latitude": fromLocation!.latitude,
-                                    "from_longitude": fromLocation!.longitude,
-                                    "to_latitude": toLocation!.latitude,
-                                    "to_longitude": toLocation!.longitude,
-                                    "start_date": startDate.toIso8601String(),
-                                    "start_time": startTimeController.text,
+                                    "fromGeoTag": GeoPoint(
+                                        fromLocation!.latitude,
+                                        fromLocation!.longitude),
+                                    "toGeoTag": GeoPoint(toLocation!.latitude,
+                                        toLocation!.longitude),
+                                    "start_date": Timestamp.fromDate(startDate),
                                     "material_name":
                                         materialNameController.text,
                                     "qty": quantityController.text,
@@ -231,10 +239,11 @@ String weightType = "Tonnes";
                                     "price": priceController.text,
                                     "desc": descriptionController.text,
                                     "created_date":
-                                        DateTime.now().toIso8601String(),
+                                        Timestamp.fromDate(DateTime.now()),
                                     "updated_date":
-                                        DateTime.now().toIso8601String(),
-                                    "created_user_id": "cXo4NlKeypD9D0J70hL6"
+                                        Timestamp.fromDate(DateTime.now()),
+                                    "created_user_id": SharedPrefs.getString(
+                                        SharedPrefs.userId)
                                   };
                                 } catch (ex) {
                                   print("ERROR ${ex.toString()}");

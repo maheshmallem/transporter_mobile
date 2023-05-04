@@ -1,9 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:transporter/ui/screens/loads/my_load_item.dart';
-
 import '../../../constants/app_strings.dart';
+import '../../../helpers/appPref.dart';
 import '../../../helpers/fire_store_helper.dart';
 
 class MyLoadsScreen extends StatefulWidget {
@@ -28,7 +27,7 @@ class _MyLoadsScreenState extends State<MyLoadsScreen> {
         ),
         body: FutureBuilder(
           future: db.getListwithWhere(DatabaseService.tbl_load,
-              "created_user_id", "cXo4NlKeypD9D0J70hL6"),
+              "created_user_id", SharedPrefs.getString(SharedPrefs.userId)!),
           builder:
               (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {

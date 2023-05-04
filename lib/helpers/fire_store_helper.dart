@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'app_helper.dart';
+import 'dart:math' as math;
 
 class DatabaseService {
   static const name = "DatabaseService";
@@ -19,6 +20,7 @@ class DatabaseService {
   }
 
   Future<dynamic> createLoad(Map<String, dynamic> load) async {
+    print("LOAD :$load");
     return _db.collection(tbl_load).add(load).then((value) {
       _db.collection(tbl_load).doc(value.id).update({"id": value.id});
       return value;
@@ -49,12 +51,79 @@ class DatabaseService {
         .get();
   }
 
+  Future<QuerySnapshot> getListwithWhereWithGeotag(
+      String tblName,
+      String whereField,
+      String whereValue,
+      double latitude,
+      double longitude) async {
+    print('Get called');
+    QuerySnapshot querySnapshot;
+    double lat = 0.0144927536231884;
+    double lon = 0.0181818181818182;
+    double distance = 10000 * 0.000621371;
+    double lowerLat = latitude - (lat * distance);
+    double lowerLon = longitude - (lon * distance);
+    double greaterLat = latitude + (lat * distance);
+    double greaterLon = longitude + (lon * distance);
+    GeoPoint lesserGeopoint = GeoPoint(lowerLat, lowerLon);
+    GeoPoint greaterGeopoint = GeoPoint(greaterLat, greaterLon);
+
+    return _db
+        .collection(tblName)
+        .where("fromGeoTag", isGreaterThan: lesserGeopoint)
+        .where("fromGeoTag", isLessThan: greaterGeopoint)
+
+        // .where(whereField, isEqualTo: whereValue)
+        .get();
+  }
+
   Future<QuerySnapshot> getListwithWhere(
       String tblName, String whereField, String whereValue) {
     return _db
         .collection(tblName)
         .where(whereField, isEqualTo: whereValue)
         .get();
+  }
+
+  Future<List<DocumentSnapshot>> getDocumentsByLocationForTrips(
+      double lat, double lng, double radius) async {
+    final collectionReference = _db.collection(tbl_load);
+
+    final center = GeoPoint(lat, lng);
+    final query = collectionReference
+        .where(GeoPoint(lat, lng),
+            isLessThan:
+                GeoPoint(center.latitude + radius, center.longitude + radius))
+        .where('fromGeoTag',
+            isGreaterThan:
+                GeoPoint(center.latitude - radius, center.longitude - radius));
+    final querySnapshot = await query.get();
+    final distanceSortedDocuments = querySnapshot.docs
+        .where((doc) =>
+            distance(center.latitude, center.longitude,
+                doc['fromGeoTag'].latitude, doc['fromGeoTag'].longitude) <=
+            radius)
+        .toList()
+      ..sort((a, b) => distance(center.latitude, center.longitude,
+              a['fromGeoTag'].latitude, a['fromGeoTag'].longitude)
+          .compareTo(distance(center.latitude, center.longitude,
+              b['fromGeoTag'].latitude, b['fromGeoTag'].longitude)));
+    return distanceSortedDocuments;
+  }
+
+  double distance(double lat1, double lon1, double lat2, double lon2) {
+    const R = 6371; // Radius of the earth in km
+    var dLat = math.pi / 180 * (lat2 - lat1);
+    var dLon = math.pi / 180 * (lon2 - lon1);
+    var a = math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(math.pi / 180 * (lat1)) *
+            math.cos(math.pi / 180 * (lat2)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+    var c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
+    var d = R * c; // Distance in km
+    return d;
   }
 
   Future<QuerySnapshot> getListwithWherePagination(

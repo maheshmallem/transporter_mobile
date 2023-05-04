@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:transporter/helpers/appPref.dart';
 
 // import 'package:pinput/pinput.dart';
 import 'package:transporter/ui/screens/_home/home_screen.dart';
 import 'package:transporter/ui/screens/auth/login_screen.dart';
 
 import '../../../constants/app_strings.dart';
+import '../../../helpers/api_helper.dart';
 import '../../../helpers/app_helper.dart';
 import '../../../helpers/fire_store_helper.dart';
 
 class OtpScreen extends StatelessWidget {
   static const name = "\otp";
-  String mobileNumber;
-  OtpScreen({super.key, required this.mobileNumber});
+  dynamic arguements;
+
+  OtpScreen({super.key, required this.arguements});
 
   DatabaseService db = DatabaseService();
   var otpController = TextEditingController();
@@ -53,7 +56,7 @@ class OtpScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    mobileNumber,
+                    arguements['number'],
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -90,6 +93,8 @@ class OtpScreen extends StatelessWidget {
                         obscureText: false,
                         animationType: AnimationType.fade,
                         pinTheme: PinTheme(
+                          selectedFillColor: Colors.white,
+                          inactiveFillColor: Colors.white,
                           shape: PinCodeFieldShape.box,
                           borderRadius: BorderRadius.circular(5),
                           fieldHeight: 50,
@@ -102,7 +107,23 @@ class OtpScreen extends StatelessWidget {
                         // errorAnimationController: otpController,
                         controller: otpController,
                         onCompleted: (v) {
-                          print("Completed");
+                          print("OTP ${otpController.text}");
+                          verifyOtp(arguements["SessionId"], v).then((value) {
+                            print(value['Status']);
+                            if (value['Status'] == "Success") {
+                              // LOGIN SUCCESS NAVIGATE
+
+                              SharedPrefs.setBool(SharedPrefs.islogin, true);
+                              SharedPrefs.setString(SharedPrefs.mobileNumber,
+                                  arguements['number']);
+                             
+
+                              Navigator.pushReplacementNamed(
+                                  context, HomeScreen.name);
+                            } else {
+                              showSnakbarMsg(context, str_invalid_otp);
+                            }
+                          });
                         },
                         beforeTextPaste: (text) {
                           print("Allowing to paste $text");
@@ -119,8 +140,6 @@ class OtpScreen extends StatelessWidget {
                           child: ElevatedButton(
                               onPressed: () {
                                 if (otpController.text.length > 4) {
-                                  Navigator.pushReplacementNamed(
-                                      context, HomeScreen.name);
                                 } else {
                                   showSnakbarMsg(context, str_invalid_otp);
                                 }

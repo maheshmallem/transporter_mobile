@@ -82,15 +82,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Expanded(
                               child: TextField(
+                                decoration: const InputDecoration(
+                                    labelText: 'First name',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20)))),
                                 controller: fistName,
                               ),
                             ),
                             Expanded(
                               child: TextField(
-                                controller: fistName,
+                                decoration: const InputDecoration(
+                                    labelText: 'Last name',
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(20)))),
+                                controller: lastName,
                               ),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 12),
+                        TextField(
+                          controller: email,
                         )
                       ])
                     : Column(children: [
